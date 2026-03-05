@@ -7,7 +7,7 @@ class NotificationService {
     final android = AndroidInitializationSettings('@mipmap/ic_launcher');
     final iOS = DarwinInitializationSettings();
     final settings = InitializationSettings(android: android, iOS: iOS);
-    await _plugin.initialize(settings);
+    await _plugin.initialize(settings: settings);
   }
 
   static Future<void> showReminder(int id, String title, String body) async {
@@ -20,6 +20,6 @@ class NotificationService {
     );
     final iosDetails = DarwinNotificationDetails();
     final details = NotificationDetails(android: androidDetails, iOS: iosDetails);
-    await _plugin.show(id, title, body, details);
+    await _plugin.show(id: id, title: title, body: body, notificationDetails: details);
   }
 }
