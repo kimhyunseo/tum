@@ -9,6 +9,8 @@ class PurchaseRecord {
   final DateTime createdAt;
   final DateTime? thinkUntil;
   final String status; // thinking | bought | skipped
+  final String? imageUrl;
+  final String? sourceUrl;
 
   PurchaseRecord({
     required this.id,
@@ -19,10 +21,14 @@ class PurchaseRecord {
     required this.createdAt,
     this.thinkUntil,
     this.status = 'thinking',
+    this.imageUrl,
+    this.sourceUrl,
   });
 
   PurchaseRecord copyWith({
     String? status,
+    String? imageUrl,
+    String? sourceUrl,
   }) {
     return PurchaseRecord(
       id: id,
@@ -33,6 +39,8 @@ class PurchaseRecord {
       createdAt: createdAt,
       thinkUntil: thinkUntil,
       status: status ?? this.status,
+      imageUrl: imageUrl ?? this.imageUrl,
+      sourceUrl: sourceUrl ?? this.sourceUrl,
     );
   }
 
@@ -45,6 +53,8 @@ class PurchaseRecord {
         'createdAt': createdAt.toIso8601String(),
         'thinkUntil': thinkUntil?.toIso8601String(),
         'status': status,
+        'imageUrl': imageUrl,
+        'sourceUrl': sourceUrl,
       };
 
   static PurchaseRecord fromJson(Map<String, dynamic> json) {
@@ -59,6 +69,8 @@ class PurchaseRecord {
           ? DateTime.parse(json['thinkUntil'])
           : null,
       status: json['status'] ?? 'thinking',
+      imageUrl: json['imageUrl'],
+      sourceUrl: json['sourceUrl'],
     );
   }
 

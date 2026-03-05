@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/purchase_record_provider.dart';
 import '../providers/budget_goal_provider.dart';
 import 'purchase_attempt_page.dart';
+import 'link_import_page.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -36,6 +37,14 @@ class HomePage extends ConsumerWidget {
                 MaterialPageRoute(builder: (_) => const PurchaseAttemptPage()),
               ),
               child: const Text('구매 생각 시작하기'),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const LinkInputPage()),
+              ),
+              child: const Text('링크로 빠르게 추가'),
             )
           ],
         ),

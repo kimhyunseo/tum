@@ -15,6 +15,9 @@ class RecordPage extends ConsumerWidget {
         itemBuilder: (context, i) {
           final r = records[i];
           return ListTile(
+            leading: r.imageUrl != null
+                ? Image.network(r.imageUrl!, width: 48, height: 48, fit: BoxFit.cover)
+                : null,
             title: Text(r.title),
             subtitle: Text('${r.category} • ${r.emotion}'),
             trailing: Text(r.status),

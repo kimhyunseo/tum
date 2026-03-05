@@ -3,6 +3,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:flutter/material.dart';
 import 'parsers/product_parser.dart';
 import 'models/product_parse_result.dart';
+import '../tum/ui/link_import_page.dart';
 
 class ReceiveShareService {
   StreamSubscription? _sub;
@@ -15,9 +16,19 @@ class ReceiveShareService {
           if (url != null) {
             final res = await ProductParser.parseFromUrl(url);
             if (!context.mounted) return;
-            Navigator.of(context).push(
+            final result = await Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => ImportFromLinkPage(parseResult: res)),
             );
+            if (!context.mounted) return;
+            if (result is Map) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => LinkImportPage(
+                    fromShare: Map<String, dynamic>.from(result),
+                  ),
+                ),
+              );
+            }
           }
         }
       }
@@ -31,9 +42,19 @@ class ReceiveShareService {
           if (url != null) {
             final res = await ProductParser.parseFromUrl(url);
             if (!context.mounted) return;
-            Navigator.of(context).push(
+            final result = await Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => ImportFromLinkPage(parseResult: res)),
             );
+            if (!context.mounted) return;
+            if (result is Map) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => LinkImportPage(
+                    fromShare: Map<String, dynamic>.from(result),
+                  ),
+                ),
+              );
+            }
           }
         }
       }

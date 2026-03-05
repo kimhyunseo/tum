@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../wishlist/receive_share_service.dart';
 import 'home_page.dart';
 import 'record_page.dart';
 import 'stats_page.dart';
@@ -14,6 +15,7 @@ class TumRootPage extends StatefulWidget {
 
 class _TumRootPageState extends State<TumRootPage> {
   int _index = 0;
+  final ReceiveShareService _shareService = ReceiveShareService();
 
   final _pages = const [
     HomePage(),
@@ -22,6 +24,18 @@ class _TumRootPageState extends State<TumRootPage> {
     GoalPage(),
     SettingsPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _shareService.startListening(context);
+  }
+
+  @override
+  void dispose() {
+    _shareService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
