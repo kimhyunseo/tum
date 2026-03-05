@@ -27,8 +27,8 @@ class ItemListNotifier extends StateNotifier<List<Item>> {
 }
 
 final storageProvider = Provider<StorageService>((ref){
-  // Default to FirebaseStorageService; replace with local implementation if needed.
-  throw UnimplementedError('Provide a StorageService implementation in main');
+  // Default implementation: use SharedPrefs for local testing.
+  return SharedPrefsStorageService();
 });
 
 final itemListProvider = StateNotifierProvider<ItemListNotifier, List<Item>>((ref){
