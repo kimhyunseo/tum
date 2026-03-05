@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../models/purchase_record.dart';
 import '../providers/purchase_record_provider.dart';
+import 'package:tum/src/core/services/notification_service.dart';
 
 class PurchaseAttemptPage extends ConsumerStatefulWidget {
   const PurchaseAttemptPage({super.key});
@@ -91,6 +92,13 @@ class _PurchaseAttemptPageState extends ConsumerState<PurchaseAttemptPage> {
       status: 'thinking',
     );
     ref.read(purchaseRecordProvider.notifier).add(record);
+    NotificationService.scheduleReminder(
+      id: record.id.hashCode,
+      title: '생각 타이머 종료',
+      body: '"${record.title}" 구매 여부를 결정해 주세요.',
+      scheduledAt: record.thinkUntil!,
+      payload: record.id,
+    );
     Navigator.pop(context);
   }
 }

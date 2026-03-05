@@ -5,6 +5,7 @@ import '../../wishlist/parsers/product_parser.dart';
 import '../../wishlist/models/product_parse_result.dart';
 import '../models/purchase_record.dart';
 import '../providers/purchase_record_provider.dart';
+import 'package:tum/src/core/services/notification_service.dart';
 
 class LinkInputPage extends StatefulWidget {
   const LinkInputPage({super.key});
@@ -75,6 +76,7 @@ class _LinkImportPageState extends ConsumerState<LinkImportPage> {
   late TextEditingController _titleCtrl;
   late TextEditingController _priceCtrl;
   late TextEditingController _categoryCtrl;
+  int _thinkDays = 1;
 
   @override
   void initState() {
@@ -116,6 +118,22 @@ class _LinkImportPageState extends ConsumerState<LinkImportPage> {
               controller: _categoryCtrl,
               decoration: const InputDecoration(labelText: 'Category'),
             ),
+            const SizedBox(height: 12),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('생각 타이머 (일) 선택'),
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 8,
+              children: [1, 5, 15]
+                  .map((d) => ChoiceChip(
+                        label: Text('$d일'),
+                        selected: _thinkDays == d,
+                        onSelected: (_) => setState(() => _thinkDays = d),
+                      ))
+                  .toList(),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(onPressed: _save, child: const Text('저장')),
           ],
@@ -135,12 +153,19 @@ class _LinkImportPageState extends ConsumerState<LinkImportPage> {
       amount: amount,
       emotion: '',
       createdAt: DateTime.now(),
-      thinkUntil: null,
+      thinkUntil: DateTime.now().add(Duration(days: _thinkDays)),
       status: 'thinking',
       imageUrl: widget.parseResult?.imageUrl ?? widget.fromShare?['image'],
       sourceUrl: widget.parseResult?.sourceUrl ?? widget.fromShare?['source'],
     );
     ref.read(purchaseRecordProvider.notifier).add(record);
+    NotificationService.scheduleReminder(
+      id: record.id.hashCode,
+      title: '생각 타이머 종료',
+      body: '"${record.title}" 구매 여부를 결정해 주세요.',
+      scheduledAt: record.thinkUntil!,
+      payload: record.id,
+    );
     Navigator.pop(context);
   }
 }
