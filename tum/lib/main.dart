@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'src/features/wishlist/ui/item_list_page.dart';
+import 'src/features/tum/ui/tum_root_page.dart';
 import 'src/core/services/notification_service.dart';
 
 void main() async {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ItemListPage(),
+      home: const TumRootPage(),
     );
   }
 }
