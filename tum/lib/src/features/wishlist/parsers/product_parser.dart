@@ -56,8 +56,10 @@ class ProductParser {
       }
       double? price;
       if (priceStr != null) price = double.tryParse(priceStr.replaceAll(',', ''));
-      String? title = ogTitle ?? doc.getElementsByTagName('title').map((e)=>e.text).firstWhere((_)=>true, orElse: ()=>'');
-      if(title != null && title.isEmpty) title = null;
+      String? title = ogTitle ?? doc.getElementsByTagName('title')
+          .map((e) => e.text)
+          .firstWhere((t) => t.trim().isNotEmpty, orElse: () => '');
+      if (title.isEmpty) title = null;
 
       // Price regex fallback
       if (price == null) {

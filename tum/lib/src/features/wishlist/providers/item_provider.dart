@@ -1,32 +1,39 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod/riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 import '../models/item.dart';
-import 'package:collection/collection.dart';
 import 'package:tum/src/core/storage/storage_service.dart';
 import 'package:tum/src/core/storage/shared_prefs_storage_service.dart';
 
-class ItemListNotifier extends StateNotifier<List<Item>> {
-  final StorageService storage;
-  ItemListNotifier(this.storage): super([]);
+class ItemListNotifier extends Notifier<List<Item>> {
+  late final StorageService _storage;
+  bool _loaded = false;
 
-  Future<void> load() async {
-    final raw = await storage.loadItems();
+  @override
+  List<Item> build() {
+    _storage = ref.watch(storageProvider);
+    if (!_loaded) {
+      _loaded = true;
+      _load();
+    }
+    return [];
+  }
+
+  Future<void> _load() async {
+    final raw = await _storage.loadItems();
     state = raw.map((m)=> Item.fromJson(m)).toList();
   }
 
   Future<void> add(Item item){
     state = [...state, item];
-    return storage.saveItems(state.map((e)=>e.toJson()).toList());
+    return _storage.saveItems(state.map((e)=>e.toJson()).toList());
   }
   Future<void> remove(String id){
     state = state.where((i)=>i.id!=id).toList();
-    return storage.saveItems(state.map((e)=>e.toJson()).toList());
+    return _storage.saveItems(state.map((e)=>e.toJson()).toList());
   }
   Future<void> update(Item item){
     state = state.map((i)=> i.id==item.id ? item : i).toList();
-    return storage.saveItems(state.map((e)=>e.toJson()).toList());
+    return _storage.saveItems(state.map((e)=>e.toJson()).toList());
   }
 }
 
@@ -35,9 +42,4 @@ final storageProvider = Provider<StorageService>((ref){
   return SharedPrefsStorageService();
 });
 
-final itemListProvider = StateNotifierProvider<ItemListNotifier, List<Item>>((ref){
-  final storage = ref.watch(storageProvider);
-  final notifier = ItemListNotifier(storage);
-  notifier.load();
-  return notifier;
-});
+final itemListProvider = NotifierProvider<ItemListNotifier, List<Item>>(ItemListNotifier.new);

@@ -3,7 +3,7 @@ import '../models/item.dart';
 
 class ItemDetailPage extends StatelessWidget {
   final Item item;
-  ItemDetailPage({required this.item});
+  const ItemDetailPage({super.key, required this.item});
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -13,13 +13,13 @@ class ItemDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Price: \\$${item.price ?? '-'}'),
-            SizedBox(height:8),
+            Text('Price: ${item.price ?? '-'}'),
+            const SizedBox(height:8),
             Text('Note: ${item.note ?? ''}'),
-            SizedBox(height:8),
+            const SizedBox(height:8),
             Text('Status: ${item.status}'),
-            SizedBox(height:16),
-            ElevatedButton(onPressed: ()=>Navigator.pop(context), child: Text('Back'))
+            const SizedBox(height:16),
+            ElevatedButton(onPressed: ()=>Navigator.pop(context), child: const Text('Back'))
           ],
         ),
       ),

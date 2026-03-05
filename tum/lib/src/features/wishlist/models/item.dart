@@ -19,8 +19,8 @@ class Item {
     this.delayDays = 7,
     DateTime? remindAt,
     this.status = 'pending',
-  })  : this.createdAt = createdAt ?? DateTime.now(),
-        this.remindAt = remindAt ?? DateTime.now().add(Duration(days: delayDays));
+  })  : createdAt = createdAt ?? DateTime.now(),
+        remindAt = remindAt ?? DateTime.now().add(Duration(days: delayDays));
 
   Map<String, dynamic> toJson() => {
         'id': id,

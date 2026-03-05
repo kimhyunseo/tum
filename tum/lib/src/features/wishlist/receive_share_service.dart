@@ -8,22 +8,33 @@ class ReceiveShareService {
   StreamSubscription? _sub;
 
   void startListening(BuildContext context) {
-    // For text/links
-    _sub = ReceiveSharingIntent.getTextStream().listen((String value) async {
-      final url = _extractUrl(value);
-      if (url != null) {
-        final res = await ProductParser.parseFromUrl(url);
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => ImportFromLinkPage(parseResult: res)));
+    _sub = ReceiveSharingIntent.instance.getMediaStream().listen((files) async {
+      for (final f in files) {
+        if (f.type == SharedMediaType.url || f.type == SharedMediaType.text) {
+          final url = _extractUrl(f.path);
+          if (url != null) {
+            final res = await ProductParser.parseFromUrl(url);
+            if (!context.mounted) return;
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => ImportFromLinkPage(parseResult: res)),
+            );
+          }
+        }
       }
     }, onError: (err) {});
 
     // For initial shared content when app was closed
-    ReceiveSharingIntent.getInitialText().then((value) async {
-      if (value != null) {
-        final url = _extractUrl(value);
-        if (url != null) {
-          final res = await ProductParser.parseFromUrl(url);
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) => ImportFromLinkPage(parseResult: res)));
+    ReceiveSharingIntent.instance.getInitialMedia().then((files) async {
+      for (final f in files) {
+        if (f.type == SharedMediaType.url || f.type == SharedMediaType.text) {
+          final url = _extractUrl(f.path);
+          if (url != null) {
+            final res = await ProductParser.parseFromUrl(url);
+            if (!context.mounted) return;
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => ImportFromLinkPage(parseResult: res)),
+            );
+          }
         }
       }
     });
@@ -43,9 +54,9 @@ class ReceiveShareService {
 // Import UI depends on product parse result; define here to avoid import cycles.
 class ImportFromLinkPage extends StatefulWidget {
   final ProductParseResult parseResult;
-  ImportFromLinkPage({required this.parseResult});
+  const ImportFromLinkPage({super.key, required this.parseResult});
   @override
-  _ImportFromLinkPageState createState()=>_ImportFromLinkPageState();
+  State<ImportFromLinkPage> createState() => _ImportFromLinkPageState();
 }
 
 class _ImportFromLinkPageState extends State<ImportFromLinkPage>{
