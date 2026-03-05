@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/item.dart';
 import 'package:collection/collection.dart';
 import '../../core/storage/storage_service.dart';
+import '../../core/storage/shared_prefs_storage_service.dart';
 
 class ItemListNotifier extends StateNotifier<List<Item>> {
   final StorageService storage;
