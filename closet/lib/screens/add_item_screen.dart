@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../models/wardrobe_item.dart';
@@ -40,8 +42,37 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   Future<void> _pickImage(ImageSource src) async {
     try {
+      // Permissions (only needed on mobile)
+      if (!kIsWeb) {
+        if (src == ImageSource.camera) {
+          final status = await Permission.camera.request();
+          if (!status.isGranted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('카메라 권한이 필요합니다')));
+            return;
+          }
+        } else {
+          final status = await Permission.photos.request();
+          if (!status.isGranted) {
+            final storage = await Permission.storage.request();
+            if (!storage.isGranted) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('사진 라이브러리 권한이 필요합니다')));
+              return;
+            }
+          }
+        }
+      }
+
       final XFile? picked = await _picker.pickImage(source: src, maxWidth: 1200, maxHeight: 1200, imageQuality: 80);
       if (picked == null) return;
+
+      if (kIsWeb) {
+        // On web, use the picked path as-is (image_picker_for_web provides a blob URL)
+        setState(() {
+          _imagePath = picked.path;
+        });
+        return;
+      }
+
       final appDir = await getApplicationDocumentsDirectory();
       final ext = picked.path.split('.').last;
       final filename = '${const Uuid().v4()}.$ext';
@@ -133,6 +164,15 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
                     final id = widget.existing?.id ?? const Uuid().v4();
+                    // If replacing image for existing item, remove old file
+                    if (widget.existing != null && widget.existing!.imagePath != null && widget.existing!.imagePath != _imagePath && _imagePath != null && !kIsWeb) {
+                      try {
+                        final old = File(widget.existing!.imagePath!);
+                        if (await old.exists()) await old.delete();
+                      } catch (e) {
+                        // ignore
+                      }
+                    }
                     final item = WardrobeItem(
                         id: id,
                         name: _nameCtrl.text.trim(),

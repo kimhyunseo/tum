@@ -43,7 +43,14 @@ class _HachiAppState extends State<HachiApp> {
     return MaterialApp(
       navigatorKey: _navKey,
       title: 'Hachi Wardrobe',
-      theme: ThemeData(primarySwatch: Colors.teal),
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal).copyWith(secondary: const Color(0xFFFFB74D)),
+        scaffoldBackgroundColor: Colors.grey[50],
+        // cardTheme compatibility varies by Flutter version; use defaults or override as needed
+        elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
+        textTheme: const TextTheme(titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+      ),
       routes: {
         '/wardrobe': (c) => WardrobeScreen(),
         '/recommend': (c) => RecommendationScreen(),
