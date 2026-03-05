@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:flutter/material.dart';
 import 'parsers/product_parser.dart';
-import '../models/product_parse_result.dart';
+import 'models/product_parse_result.dart';
 
 class ReceiveShareService {
   StreamSubscription? _sub;
