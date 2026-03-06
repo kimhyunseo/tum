@@ -40,68 +40,94 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Scaffold(
       appBar: AppBar(title: const Text('T.U.M')),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         children: [
+          const Text('지출 요약', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
           _summaryCard(
             title: '이번 달 지출',
             value: '${totalSpent.toStringAsFixed(0)}원',
-            subtitle: '목표(주/월): ${goal.weeklyLimit} / ${goal.monthlyLimit}',
+            subtitle: '목표: ${goal.monthlyLimit}원',
+            color: const Color(0xFFC8E6C9),
           ),
           const SizedBox(height: 12),
           _summaryCard(
-            title: '오늘의 구매 기록',
-            value: '${records.length}건',
-            subtitle: '생각 중 ${thinking.length}건',
+            title: '생각 중인 항목',
+            value: '${thinking.length}건',
+            subtitle: '총 ${records.length}건의 시도',
+            color: const Color(0xFFE8F5E9),
           ),
-          const SizedBox(height: 16),
-          const Text('오늘 생각 중인 목록', style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          if (thinking.isEmpty)
-            const Text('생각 중인 항목이 없습니다.'),
-          for (final r in thinking)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(r.title),
-              subtitle: Text('남은 기간: ${_daysLeft(r.thinkUntil)}일'),
-              trailing: Text(r.category),
-            ),
-          const SizedBox(height: 16),
-          const Text('오늘의 제안: 구매 전에 5분만 더 생각해봐요'),
+          const SizedBox(height: 24),
+          const Text('오늘 생각 중인 목록', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
-          ElevatedButton(
+          if (thinking.isEmpty)
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Center(child: Text('지금은 비어있어요. 새로운 생각을 시작해볼까요?')),
+              ),
+            ),
+          for (final r in thinking)
+            _thinkingItemCard(r),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const PurchaseAttemptPage()),
             ),
-            child: const Text('구매 생각 시작하기'),
+            icon: const Icon(Icons.add),
+            label: const Text('구매 생각 시작하기'),
           ),
-          const SizedBox(height: 8),
-          OutlinedButton(
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const LinkInputPage()),
             ),
-            child: const Text('링크로 빠르게 추가'),
+            icon: const Icon(Icons.link),
+            label: const Text('링크로 빠르게 추가'),
           )
         ],
       ),
     );
   }
 
-  Widget _summaryCard({required String title, required String value, required String subtitle}) {
+  Widget _summaryCard({
+    required String title,
+    required String value,
+    required String subtitle,
+    required Color color,
+  }) {
     return Card(
+      color: color,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 6),
-            Text(value, style: const TextStyle(fontSize: 20)),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1B5E20))),
+            const SizedBox(height: 8),
+            Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF2E7D32))),
             const SizedBox(height: 4),
-            Text(subtitle),
+            Text(subtitle, style: const TextStyle(color: Color(0xFF388E3C))),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _thinkingItemCard(PurchaseRecord r) {
+    final days = _daysLeft(r.thinkUntil);
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: const Color(0xFF81C784),
+          child: Text(days.toString(), style: const TextStyle(color: Colors.white)),
+        ),
+        title: Text(r.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text('D-$days일 | ${r.category}'),
+        trailing: const Icon(Icons.chevron_right),
       ),
     );
   }
