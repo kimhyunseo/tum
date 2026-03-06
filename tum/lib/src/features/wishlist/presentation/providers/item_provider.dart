@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/item.dart';
+import '../../domain/entities/item.dart';
 import 'package:tum/src/core/storage/storage_service.dart';
 import 'package:tum/src/core/storage/shared_prefs_storage_service.dart';
 

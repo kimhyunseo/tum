@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tum/src/core/theme/app_colors.dart';
 import '../providers/purchase_provider.dart';
+import '../providers/budget_provider.dart';
+import '../../domain/entities/budget_goal.dart';
 import '../../domain/entities/purchase_attempt.dart';
-import '../providers/budget_goal_provider.dart';
 import 'purchase_attempt_page.dart';
 import 'link_import_page.dart';
 
@@ -20,7 +21,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final recordsAsync = ref.watch(purchaseListProvider);
-    final goal = ref.watch(budgetGoalProvider);
+    final goal = ref.watch(budgetProvider);
 
     return recordsAsync.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),

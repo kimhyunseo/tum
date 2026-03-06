@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../wishlist/receive_share_service.dart';
+import 'package:tum/src/features/wishlist/receive_share_service.dart';
 import 'home_page.dart';
 import 'record_page.dart';
 import 'stats_page.dart';

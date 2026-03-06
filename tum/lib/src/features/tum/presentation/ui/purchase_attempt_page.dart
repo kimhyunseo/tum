@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import '../models/purchase_record.dart';
-import '../providers/purchase_record_provider.dart';
+import 'package:tum/src/features/tum/domain/entities/purchase_attempt.dart';
+import 'package:tum/src/features/tum/presentation/providers/purchase_provider.dart';
 import 'package:tum/src/core/services/notification_service.dart';
 
 class PurchaseAttemptPage extends ConsumerStatefulWidget {
@@ -81,7 +81,7 @@ class _PurchaseAttemptPageState extends ConsumerState<PurchaseAttemptPage> {
     final title = _titleCtrl.text.trim();
     if (title.isEmpty) return;
     final amount = double.tryParse(_amountCtrl.text.trim()) ?? 0;
-    final record = PurchaseRecord(
+    final record = PurchaseAttempt(
       id: const Uuid().v4(),
       title: title,
       category: _categoryCtrl.text.trim(),
@@ -91,7 +91,7 @@ class _PurchaseAttemptPageState extends ConsumerState<PurchaseAttemptPage> {
       thinkUntil: DateTime.now().add(Duration(days: _thinkDays)),
       status: 'thinking',
     );
-    ref.read(purchaseRecordProvider.notifier).add(record);
+    ref.read(purchaseListProvider.notifier).add(record);
     NotificationService.scheduleReminder(
       id: record.id.hashCode,
       title: '생각 타이머 종료',

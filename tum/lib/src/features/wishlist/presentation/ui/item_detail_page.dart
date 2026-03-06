@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/item.dart';
+import '../../domain/entities/item.dart';
 
 class ItemDetailPage extends StatelessWidget {
   final Item item;

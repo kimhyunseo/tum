@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlparser;
-import '../models/product_parse_result.dart';
+import '../domain/entities/product_parse_result.dart';
 import 'dart:convert';
 
 class ProductParser {

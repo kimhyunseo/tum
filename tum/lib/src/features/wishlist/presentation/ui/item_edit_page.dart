@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/item.dart';
+import '../../domain/entities/item.dart';
 import '../providers/item_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,7 +22,7 @@ class _ItemEditPageState extends ConsumerState<ItemEditPage>{
     super.initState();
     if(widget.item!=null){
       _titleCtrl.text = widget.item!.title;
-      _priceCtrl.text = widget.item!.price?.toString() ?? '';
+      _priceCtrl.text = widget.item!.price.toString();
       _noteCtrl.text = widget.item!.note ?? '';
       _delayDays = widget.item!.delayDays;
     }
@@ -61,9 +61,19 @@ class _ItemEditPageState extends ConsumerState<ItemEditPage>{
   void _save(){
     final title = _titleCtrl.text.trim();
     if(title.isEmpty) return;
-    final price = double.tryParse(_priceCtrl.text.trim());
-    final id = widget.item?.id ?? Uuid().v4();
-    final item = Item(id: id, title: title, note: _noteCtrl.text.trim(), price: price, delayDays: _delayDays);
+    final price = double.tryParse(_priceCtrl.text.trim()) ?? 0;
+    final id = widget.item?.id ?? const Uuid().v4();
+    final item = Item(
+      id: id,
+      title: title,
+      note: _noteCtrl.text.trim(),
+      price: price,
+      delayDays: _delayDays,
+      category: widget.item?.category ?? '미분류',
+      createdAt: widget.item?.createdAt ?? DateTime.now(),
+      imageUrl: widget.item?.imageUrl,
+      url: widget.item?.url,
+    );
     final notifier = ref.read(itemListProvider.notifier);
     if(widget.item==null) {
       notifier.add(item);

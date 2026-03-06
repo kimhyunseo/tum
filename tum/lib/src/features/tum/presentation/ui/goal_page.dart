@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/budget_goal_provider.dart';
+import '../providers/budget_provider.dart';
 
 class GoalPage extends ConsumerStatefulWidget {
   const GoalPage({super.key});
@@ -15,7 +15,7 @@ class _GoalPageState extends ConsumerState<GoalPage> {
 
   @override
   Widget build(BuildContext context) {
-    final goal = ref.watch(budgetGoalProvider);
+    final goal = ref.watch(budgetProvider);
     _weeklyCtrl.text = goal.weeklyLimit.toStringAsFixed(0);
     _monthlyCtrl.text = goal.monthlyLimit.toStringAsFixed(0);
     return Scaffold(
@@ -48,9 +48,9 @@ class _GoalPageState extends ConsumerState<GoalPage> {
   void _save() {
     final weekly = double.tryParse(_weeklyCtrl.text) ?? 0;
     final monthly = double.tryParse(_monthlyCtrl.text) ?? 0;
-    ref.read(budgetGoalProvider.notifier).setGoal(
-          weekly: weekly,
-          monthly: monthly,
+    final goal = ref.read(budgetProvider);
+    ref.read(budgetProvider.notifier).update(
+          goal.copyWith(weeklyLimit: weekly, monthlyLimit: monthly),
         );
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('예산이 저장되었습니다.')),

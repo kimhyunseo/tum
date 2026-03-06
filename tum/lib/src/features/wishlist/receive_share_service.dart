@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:flutter/material.dart';
-import 'parsers/product_parser.dart';
-import 'models/product_parse_result.dart';
-import '../tum/ui/link_import_page.dart';
+import 'package:tum/src/features/wishlist/data/product_parser.dart';
+import 'package:tum/src/features/wishlist/domain/entities/product_parse_result.dart';
+import 'package:tum/src/features/tum/presentation/ui/link_import_page.dart';
 
 class ReceiveShareService {
   StreamSubscription? _sub;

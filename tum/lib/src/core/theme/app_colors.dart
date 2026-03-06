@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // 메인 컬러: 포레스트 그린
-  static const Color primary = Color(0xFF2E7D32);
-  static const Color primaryLight = Color(0xFF81C784);
-  static const Color primaryDark = Color(0xFF1B5E20);
+  // Primary Color Scale (Forest Green)
+  static const Color primary50 = Color(0xFFE8F5E9);
+  static const Color primary100 = Color(0xFFC8E6C9);
+  static const Color primary200 = Color(0xFFA5D6A7);
+  static const Color primary300 = Color(0xFF81C784);
+  static const Color primary400 = Color(0xFF66BB6A);
+  static const Color primary500 = Color(0xFF4CAF50);
+  static const Color primary600 = Color(0xFF43A047);
+  static const Color primary700 = Color(0xFF388E3C);
+  static const Color primary800 = Color(0xFF2E7D32); // Main Forest Green
+  static const Color primary900 = Color(0xFF1B5E20);
 
-  // 보조 컬러 및 배경색
-  static const Color secondary = Color(0xFFE8F5E9);
+  // Alias for existing code compatibility
+  static const Color primary = primary800;
+  static const Color primaryLight = primary300;
+  static const Color primaryDark = primary900;
+  static const Color secondary = primary50;
   static const Color background = Color(0xFFF8FAF8);
   static const Color surface = Colors.white;
 
